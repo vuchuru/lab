@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Validation Form</title>
+<style>
+body {
+margin: 0;
+height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+background: linear-gradient(135deg, #36d1dc, #5b86e5);
+font-family: Arial, sans-serif;
+}
+.form-container {
+background: #fff;
+padding: 20px;
+border-radius: 10px;
+width: 360px;
+box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+h2 {
+text-align: center;
+margin-bottom: 10px;
+}
+label {
+font-size: 14px;
+margin-top: 8px;
+display: block;
+}
+input {
+width: 100%;
+padding: 8px;
+margin-top: 3px;
+border-radius: 5px;
+border: 1px solid #ccc;
+}
+.error {
+color: red;
+font-size: 12px;
+}
+button {
+width: 100%;
+padding: 10px;
+
+
+
+margin-top: 12px;
+background: #36d1dc;
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+font-weight: bold;
+}
+button:hover {
+background: #2aa7b0;
+}
+</style>
+</head>
+<body>
+<div class="form-container">
+<h2>Form Validation</h2>
+<label>Name *</label>
+<input type="text" id="name" placeholder="please put something here">
+<div id="nameError" class="error"></div>
+<label>Occupation (optional)</label>
+<input type="text" id="occupation" placeholder="please put something here">
+<label>Email *</label>
+<input type="email" id="email" placeholder="please put something here">
+<div id="emailError" class="error"></div>
+<label>Confirm Email *</label>
+<input type="email" id="confirmEmail" placeholder="please put something here">
+<div id="confirmEmailError" class="error"></div>
+<label>Date (mm/dd/yyyy) *</label>
+<input type="date" id="date">
+<div id="dateError" class="error"></div>
+<label>Password *</label>
+<input type="password" id="password" placeholder="please put something here">
+<div id="passwordError" class="error"></div>
+<label>Repeat Password *</label>
+<input type="password" id="repeatPassword" placeholder="please put something here">
+<div id="repeatPasswordError" class="error"></div>
+<label>Number *</label>
+<input type="number" id="number" placeholder="please put something here">
+<div id="numberError" class="error"></div>
+<button onclick="validateForm()">Submit</button>
+</div>
+
+
+<script>
+function validateForm() {
+let valid = true;
+document.querySelectorAll('.error').forEach(e => e.innerText = '');
+let name = document.getElementById('name').value.trim();
+let email = document.getElementById('email').value.trim();
+let confirmEmail = document.getElementById('confirmEmail').value.trim();
+let date = document.getElementById('date').value;
+let password = document.getElementById('password').value;
+let repeatPassword = document.getElementById('repeatPassword').value;
+let number = document.getElementById('number').value;
+if (name === '') {
+document.getElementById('nameError').innerText = '(*) input is not complete';
+valid = false;
+}
+if (email === '') {
+document.getElementById('emailError').innerText = '(*) please put something here';
+valid = false;
+}
+if (confirmEmail === '' || confirmEmail !== email) {
+document.getElementById('confirmEmailError').innerText = '(*) please put something here';
+valid = false;
+}
+if (date === '') {
+document.getElementById('dateError').innerText = '(*) please put something here';
+valid = false;
+}
+if (password === '' || password.length < 6) {
+document.getElementById('passwordError').innerText = '(*) please put something here';
+valid = false;
+}
+if (repeatPassword === '' || password !== repeatPassword) {
+document.getElementById('repeatPasswordError').innerText = '(*) please put something here';
+valid = false;
+}
+if (number === '' || number <= 0) {
+document.getElementById('numberError').innerText = '(*) please put something here';
+valid = false;
+}
+if (valid) {
+alert('Form submitted successfully');
+}
+}
+</script>
+
+
+</body>
+</html>

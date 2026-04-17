@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sports Quiz</title>
+<style>
+body {
+font-family: Arial;
+background: linear-gradient(135deg,#232526,#414345);
+color:#fff;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+.container {
+background:#2c2c2c;
+padding:40px;
+width:650px;
+border-radius:25px;
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+h2 {text-align:center;font-size:34px;}
+.progress {height:12px;background:#555;border-radius:6px;margin-bottom:15px;}
+.progress-bar {height:12px;background:#00c6ff;width:0%;border-radius:6px;}
+.timer {text-align:right;font-weight:bold;margin-bottom:10px;font-size:24px;}
+button {
+width:48%;
+margin-top:15px;
+padding:12px;
+border:none;
+background:#00c6ff;
+color:#000;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+font-weight:bold;
+}
+button:hover {background:#00a3cc;}
+.btn-group {display:flex;justify-content:space-between;}
+.option {
+display:block;
+margin:15px 0;
+padding:18px;
+border-radius:12px;
+background:#444;
+cursor:pointer;
+font-size:20px;
+transition:0.2s;
+}
+.option:hover {background:#555;}
+.option.correct {background:#2e7d32;color:#fff;}
+.option.wrong {background:#c62828;color:#fff;}
+input[type="radio"] {
+margin-right:15px;
+transform:scale(1.5);
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h2> Sports Quiz</h2>
+<div class="timer" id="timer">Time: 60</div>
+<div class="progress"><div class="progress-bar" id="progress"></div></div>
+<div id="quiz"></div>
+<div class="btn-group">
+<button onclick="prevQuestion()">⬅ Previous</button>
+<button onclick="nextQuestion()">Next ➡</button>
+</div>
+</div>
+
+<script>
+const questions = [
+{q:"Which country won FIFA World Cup 2018?",a:["France","Brazil","Germany","Spain"],c:0},
+{q:"How many players in a cricket team?",a:["9","10","11","12"],c:2},
+{q:"Olympics held every?",a:["2","3","4","5"],c:2},
+{q:"Tennis Grand Slam count?",a:["2","3","4","5"],c:2},
+{q:"Basketball players per team?",a:["5","6","7","8"],c:0},
+{q:"Virat Kohli plays which sport?",a:["Football","Cricket","Tennis","Hockey"],c:1},
+{q:"Messi plays for?",a:["Argentina","Brazil","Spain","Italy"],c:0},
+{q:"Hockey national sport of India?",a:["Yes","No"],c:1},
+{q:"IPL stands for?",a:["Indian Premier League","International Player League","India Play League","None"],c:0},
+{q:"Kabaddi origin country?",a:["India","China","Japan","USA"],c:0},
+{q:"Football match duration?",a:["60","70","80","90"],c:3},
+{q:"Cricket pitch length?",a:["20.12m","18m","25m","30m"],c:0},
+{q:"Badminton shuttle weight?",a:["4-5g","5-6g","6-7g","7-8g"],c:0},
+{q:"Chess pieces per side?",a:["14","15","16","17"],c:2},
+{q:"Olympic symbol rings?",a:["4","5","6","7"],c:1},
+{q:"Which sport uses racket?",a:["Tennis","Football","Cricket","Hockey"],c:0},
+{q:"Wimbledon is for?",a:["Cricket","Tennis","Football","Golf"],c:1},
+{q:"Which ball is used in golf?",a:["Hard","Soft","Plastic","Rubber"],c:0},
+{q:"Boxing ring shape?",a:["Square","Circle","Triangle","Oval"],c:0},
+{q:"National game of USA?",a:["Baseball","Basketball","Football","None"],c:3},
+{q:"Ronaldo plays which sport?",a:["Football","Cricket","Hockey","Golf"],c:0},
+{q:"Test cricket days?",a:["3","4","5","6"],c:2},
+{q:"How many umpires in cricket?",a:["1","2","3","4"],c:1},
+{q:"Which sport uses net?",a:["Volleyball","Football","Cricket","Golf"],c:0},
+{q:"Which country hosts Olympics 2020?",a:["China","Japan","USA","UK"],c:1},
+{q:"Swimming pool length Olympic?",a:["25m","50m","75m","100m"],c:1},
+{q:"Which sport uses bat?",a:["Cricket","Football","Hockey","Tennis"],c:0},
+{q:"FIFA stands for?",a:["Football Intl Federation","Intl Football Association","Federation Intl Football Assoc","None"],c:2},
+{q:"Which sport is Nadal famous for?",a:["Tennis","Cricket","Golf","Football"],c:0},
+{q:"How many players in volleyball?",a:["5","6","7","8"],c:1}
+];
+
+let index=0;
+let answers = new Array(questions.length).fill(null);
+let time=60;
+let timer;
+
+function startTimer(){
+clearInterval(timer);
+time=60;
+document.getElementById('timer').innerText = "Time: " + time;
+timer=setInterval(()=>{
+time--;
+document.getElementById('timer').innerText = "Time: " + time;
+if(time<=0){
+nextQuestion();
+}
+},1000);
+}
+
+function loadQuestion(){
+startTimer();
+const q = questions[index];
+let html = `<p style='font-size:24px'><b>${index+1}. ${q.q}</b></p>`;
+q.a.forEach((opt,i)=>{
+const checked = answers[index] === i ? 'checked' : '';
+html += `<label class='option'>
+<input type='radio' name='opt' value='${i}' ${checked}> ${opt}
+</label>`;
+});
+document.getElementById('quiz').innerHTML = html;
+document.getElementById('progress').style.width = ((index+1)/questions.length)*100 + "%";
+}
+
+function nextQuestion(){
+saveAnswer();
+if(index < questions.length-1){
+index++;
+loadQuestion();
+} else {
+showResult();
+}
+}
+
+function prevQuestion(){
+saveAnswer();
+if(index > 0){
+index--;
+loadQuestion();
+}
+}
+
+function saveAnswer(){
+const selected = document.querySelector('input[name="opt"]:checked');
+if(selected){
+answers[index] = parseInt(selected.value);
+}
+}
+
+function showResult(){
+clearInterval(timer);
+let score=0;
+let review="";
+answers.forEach((ans,i)=>{
+const correct = questions[i].c;
+if(ans === correct) score++;
+review += `<p><b>${i+1}. ${questions[i].q}</b></p>`;
+questions[i].a.forEach((opt,j)=>{
+let cls="";
+if(j===correct) cls="correct";
+if(j===ans && ans!==correct) cls="wrong";
+review += `<div class='option ${cls}'>${opt}</div>`;
+});
+});
+document.getElementById('quiz').innerHTML = `
+<h3> Score: ${score}/${questions.length}</h3>
+<p>Percentage: ${Math.round((score/questions.length)*100)}%</p>
+${review}
+`;
+document.querySelector('.btn-group').style.display='none';
+document.getElementById('progress').style.width = "100%";
+}
+
+loadQuestion();
+</script>
+</body>
+</html>
